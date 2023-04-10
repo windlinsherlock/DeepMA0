@@ -1,0 +1,236 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ext="clr-namespace:PACS.Extensions"
+             xmlns:local="clr-namespace:PACS.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:prism="http://prismlibrary.com/" xmlns:viewmodels="clr-namespace:PACS.ViewModels" xmlns:Converters="clr-namespace:PACS.Commons.Converters" x:Class="PACS.Views.MarkView"
+             d:DataContext="{d:DesignInstance Type={x:Type viewmodels:MarkViewModel}}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Converters:CenterConverter x:Key="CenterConverter"/>
+            <Converters:NagateConverter x:Key="NagateConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="Silver" Name="Grid" >
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        
+
+        <Grid Grid.Row="0" Width="170" HorizontalAlignment="Left" Background="#7FFFFFFF"/>
+
+        <ToolBarTray Grid.Row="0" HorizontalAlignment="Center">
+            <ToolBar 
+                Style="{DynamicResource MaterialDesignToolBar}"
+                ClipToBounds="False" Background="{x:Null}">
+
+                <Button
+                    ToolTip="保存"
+                    Content="{materialDesign:PackIcon Kind=ContentSave}"
+                    Click="Save"/>
+                <Button
+                    ToolTip="载入"
+                    Content="{materialDesign:PackIcon Kind=ContentSaveSettingsOutline}"
+                    Click="Load"/>
+                <Separator />
+
+                <!--<Button
+                    ToolTip="撤销"
+                    Content="{materialDesign:PackIcon Kind=Undo}" />
+                <Button
+                    ToolTip="重做"
+                    Content="{materialDesign:PackIcon Kind=Redo}" />
+                <Separator />-->               
+
+                <Button
+                    ToolTip="选择"
+                    Content="{materialDesign:PackIcon Kind=ArrowTopLeftThick}" 
+                    Click="Select"/>
+                <Button
+                    ToolTip="画笔"
+                    Content="{materialDesign:PackIcon Kind=Pen}" 
+                    Click="DrawAny"/>
+                <Button
+                    ToolTip="直线"
+                    Content="{materialDesign:PackIcon Kind=Minus}" 
+                    Click="DrawLine"/>
+                <Button
+                    ToolTip="矩形"
+                    Content="{materialDesign:PackIcon Kind=RectangleOutline}"
+                    Click="DrawRectangle"/>
+                <Button
+                    ToolTip="多边形"
+                    Content="{materialDesign:PackIcon Kind=PentagonOutline}"
+                    Click="DrawPolygon"/>
+                <Button
+                    ToolTip="橡皮擦"
+                    Content="{materialDesign:PackIcon Kind=Eraser}"
+                    Click="Erase"/>
+
+                <Separator />
+                <materialDesign:PopupBox ToolTip="调整图片" StaysOpen="True">
+                    <materialDesign:PopupBox.ToggleContent>
+                        <materialDesign:PackIcon Kind="PanoramaVariantOutline"/>
+                    </materialDesign:PopupBox.ToggleContent>
+                    <Canvas Height="200" Width="255">
+                        <Slider Value="40" Minimum="0" Maximum="100" Margin="0,20,0,0" Width="100" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                TickFrequency="1"
+                                TickPlacement="None" Focusable="False" SelectionStart="255" Panel.ZIndex="1">
+                            
+                        </Slider>
+                        <Slider Value="40" Minimum="100" Maximum="255" Margin="50,20,0,0" IsDirectionReversed="True" Width="100" Focusable="False"
+                                Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                TickFrequency="1"
+                                TickPlacement="None" Panel.ZIndex="1" />
+                        
+                    </Canvas>
+                </materialDesign:PopupBox>
+                
+                <Button
+                    ToolTip="关注区域"
+                    Content="{materialDesign:PackIcon Kind=CodeBrackets}"
+                    Click="DrawSquare"/>
+                <ComboBox Name="ChooseButton" Width="60" VerticalAlignment="Center" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction 
+                                Command="{Binding SelectionChangedCommand}" 
+                                CommandParameter="{Binding ElementName=ChooseButton, Mode=OneWay}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ComboBoxItem IsSelected="True" Content="未标注" />
+                    <ComboBoxItem Content="骨折" />
+                    <ComboBoxItem Content="未骨折" />
+                </ComboBox>
+
+                <Grid Background="{x:Null}" >
+                    <Button x:Name="AutoMark"
+                    ToolTip="自动标注"
+                    Visibility="Visible"
+                    Click="AutoMarkClick" Background="{x:Null}" BorderBrush="{x:Null}">
+                        <materialDesign:PackIcon x:Name="AutoMarkIcon" Kind="Marker"/>
+                    </Button>
+                </Grid>                
+                <Grid Background="{x:Null}" >
+                    <Button x:Name="Classify"
+                    ToolTip="自动诊断"
+                    Visibility="Visible"
+                    Click="AutoDiagnose" Background="{x:Null}" BorderBrush="{x:Null}">
+                        <materialDesign:PackIcon x:Name="ClassifyIcon" Kind="Cloud"/>
+                    </Button>
+
+                    <ProgressBar x:Name="ProgressBar" ToolTip="正在等待云端进行标注" Visibility="Hidden" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="35" IsIndeterminate="True" />
+                </Grid>
+
+
+
+
+
+
+
+
+
+
+            </ToolBar>
+        </ToolBarTray>
+
+
+        
+
+        <Grid  Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="170"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer x:Name="ScrollViewer" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" Grid.Column="0" VerticalScrollBarVisibility="Hidden">
+                
+                    <ListBox x:Name="WorkList"   Background="#7FFFFFFF" 
+                        SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
+                        ItemsSource="{Binding FileItems}" >
+                        
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Disabled" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                <!--绑定跳转命令-->
+                                <i:InvokeCommandAction Command="{Binding NavigateCommand}" 
+                                                       CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListBox}, Mode=FindAncestor}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+
+
+
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Background="Transparent" Orientation="Horizontal">
+                                    <Grid Height="150" Width="150">
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="5"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="5"/>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="30"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Image  Source="{Binding Thumb}" Grid.Column="1" Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="120" MaxWidth="120"/>
+                                        <materialDesign:PackIcon x:Name="Icon" Grid.Column="1" Grid.Row="1" Width="100" Height="100" Visibility="Hidden"/>
+                                        <materialDesign:PackIcon x:Name="State" Grid.Row="0" Grid.Column="2" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Hidden"/>
+
+
+
+
+                                        <ScrollViewer Grid.Column="1" Grid.Row="2" VerticalScrollBarVisibility="Hidden">
+
+                                            <TextBlock x:Name="TextBlock" Text="{Binding FileName}" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="150" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+                                        </ScrollViewer>
+
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+            </ScrollViewer>
+
+
+            <Grid Grid.Column="1" x:Name="Viewer"  ClipToBounds="True" >
+                <Grid Grid.Column="1" Margin="0,0,0,5"  x:Name="ClipGrid" RenderTransformOrigin="0.5,0.5">
+                    <InkCanvas  x:Name="dcm"  IsEnabled="False" MouseWheel="dcm_MouseWheel" PreviewMouseDown="dcm_MouseDown" PreviewMouseMove="dcm_PreviewMouseMove" Cursor="Arrow" Background="{x:Null}" StrokeCollected="dcm_StrokeCollected">
+                        <InkCanvas.RenderTransform>
+                            <TransformGroup>
+                                <TranslateTransform x:Name="dcm_location"/>
+                                <RotateTransform/>
+                                <ScaleTransform x:Name="dcm_scale" CenterX="{Binding DesiredSize.Width, Converter={StaticResource CenterConverter}, ElementName=Grid, Mode=OneWay}" CenterY="{Binding DesiredSize.Height, Converter={StaticResource CenterConverter}, ElementName=Grid}"/>
+                            </TransformGroup>
+                        </InkCanvas.RenderTransform>
+                    </InkCanvas>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="2">
+                <local:TagPanelView />
+            </Grid>
+            
+
+        </Grid>
+        <ContentControl prism:RegionManager.RegionName="{x:Static ext:PrismManager.MarkViewRegionName}" />
+    </Grid>
+</UserControl>

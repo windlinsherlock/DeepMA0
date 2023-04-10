@@ -1,0 +1,193 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ext="clr-namespace:PACS.Extensions"
+             xmlns:local="clr-namespace:PACS.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:Converters="clr-namespace:PACS.Commons.Converters" x:Class="PACS.Views.WorkBooksView"
+             xmlns:viewmodels="clr-namespace:PACS.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:WorkBooksViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Converters:NagateConverter x:Key="NagateConverter"/>
+        <materialDesign:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="72"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <TabControl Width="72" x:Name="Tab"
+            Style="{StaticResource MaterialDesignNavigatilRailTabControl}"           
+            SelectedIndex="{Binding SelectedTab, UpdateSourceTrigger=PropertyChanged}"
+            TabStripPlacement="Left"            
+            materialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+
+
+
+            <TabItem Height="60" IsSelected="True">
+                <TabItem.Header>
+                    <StackPanel Height="auto" Width="auto" Orientation="Vertical" ToolTip="本地文件，不会上传到服务器">
+                        <materialDesign:PackIcon Kind="Laptop" Width="24" Height="24" HorizontalAlignment="Center" />
+                        <TextBlock  Text="本地" HorizontalAlignment="Center" Margin="0,3,0,0" />
+                    </StackPanel>
+                </TabItem.Header>
+
+                <Grid>
+
+                </Grid>
+
+
+            </TabItem>
+
+            <TabItem Height="60">
+                <TabItem.Header>
+                    <StackPanel Height="auto" Width="auto" Orientation="Vertical" ToolTip="服务器上的公开数据集">
+                        <materialDesign:PackIcon Kind="Folder" Width="24" Height="24" HorizontalAlignment="Center" />
+                        <TextBlock  Text="公共" HorizontalAlignment="Center" Margin="0,3,0,0" />
+                    </StackPanel>
+                </TabItem.Header>
+
+                <!--公共-->
+                <Grid>
+
+                </Grid>
+            </TabItem>
+
+            <TabItem Height="60">
+                <TabItem.Header>
+                    <StackPanel Height="auto" Width="auto" Orientation="Vertical" ToolTip="服务器上的私有数据集，仅相同组织的成员能够查看">
+                        <materialDesign:PackIcon Kind="AccountLockOutline" Width="24" Height="24" HorizontalAlignment="Center" />
+                        <TextBlock  Text="私有" HorizontalAlignment="Center" Margin="0,3,0,0" />
+                    </StackPanel>
+                </TabItem.Header>
+                <TextBlock Text="私有"/>
+            </TabItem>
+        </TabControl>
+        <Grid Grid.Column="1" Background="White">
+            <!--文件夹-->
+            <Grid Visibility="{Binding FileVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <materialDesign:DialogHost>
+                    <Grid>
+                        <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                            <ListBox x:Name="List" ItemsSource="{Binding FileFolderItems}"
+                                     SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding NavigateCommand}" 
+                                                       CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListBox}, Mode=FindAncestor}}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Background="Transparent" Orientation="Horizontal">
+                                            <StackPanel.ContextMenu>
+                                                <ContextMenu Width="180" >
+                                                    
+                                                    <MenuItem Header="释放所占存储空间" Click="FreeCommand"/>
+                                                    <MenuItem Header="删除" Click="DeleteCommand"/>
+                                                </ContextMenu>
+                                            </StackPanel.ContextMenu>
+
+                                            <Grid Height="150" Width="150">
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="5"/>
+                                                    <RowDefinition Height="1*"/>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+
+
+                                                <materialDesign:PackIcon  Grid.Column="1" Grid.Row="1" Width="140" Height="140" Kind="FolderOutline"/>
+
+
+
+                                                <ScrollViewer Grid.Column="1" Grid.Row="2" VerticalScrollBarVisibility="Hidden">
+
+                                                    <TextBlock  Text="{Binding Name}" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="150" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+                                                </ScrollViewer>
+
+                                            </Grid>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50" Height="50" Margin="0,0,40,40"
+                                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" Background="{x:Null}" Cursor="Hand">
+                            <Button.CommandParameter>
+                                <StackPanel Margin="16" Width="400" >
+                                    <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="文件夹名" />
+
+                                    <TextBox x:Name="FileFolder" Margin="0,50,0,0" HorizontalAlignment="Stretch" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True" Margin="0,8,8,0" Content="确认" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                                     Click="CreateFolder">
+
+
+                                        </Button>
+                                        <Button IsCancel="True" Margin="0,8,8,0" Content="取消" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                                            <Button.Style>
+                                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                                                    <Setter Property="Foreground" Value="Red" />
+                                                </Style>
+                                            </Button.Style>
+
+
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Button.CommandParameter>
+                            <materialDesign:PackIcon Kind="Add" Width="40" Height="40"/>
+                        </Button>
+                    </Grid>
+
+
+                </materialDesign:DialogHost>
+
+
+
+
+
+
+            </Grid>
+
+            <!--内部的文件-->
+            <Grid Visibility="{Binding FileVisibility, Converter={StaticResource NagateConverter}}">
+                <Grid>
+                    <ScrollViewer  PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                        <local:FileExplorerView x:Name="CloudFileExplorerView"/>
+                    </ScrollViewer>
+
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50" Height="50" Margin="0,0,40,40"
+                                Command="{Binding BackCommand}" CommandParameter="Public"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" Background="{x:Null}" Cursor="Hand">
+
+                        <materialDesign:PackIcon Kind="ArrowBack" Width="40" Height="40"/>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Grid>
+
+       <!-- 定义公共区域名字-->
+        <ContentControl prism:RegionManager.RegionName="{x:Static ext:PrismManager.WorkBooksViewRegionName}" />
+    </Grid>
+</UserControl>

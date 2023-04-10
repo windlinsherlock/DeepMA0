@@ -1,0 +1,10 @@
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\bin\Debug\netcoreapp3.1\PACS.Shared.deps.json
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\bin\Debug\netcoreapp3.1\PACS.Shared.dll
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\bin\Debug\netcoreapp3.1\PACS.Shared.pdb
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Debug\netcoreapp3.1\PACS.Shared.csproj.AssemblyReference.cache
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Debug\netcoreapp3.1\PACS.Shared.GeneratedMSBuildEditorConfig.editorconfig
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Debug\netcoreapp3.1\PACS.Shared.AssemblyInfoInputs.cache
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Debug\netcoreapp3.1\PACS.Shared.AssemblyInfo.cs
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Debug\netcoreapp3.1\PACS.Shared.csproj.CoreCompileInputs.cache
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Debug\netcoreapp3.1\PACS.Shared.dll
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Debug\netcoreapp3.1\PACS.Shared.pdb

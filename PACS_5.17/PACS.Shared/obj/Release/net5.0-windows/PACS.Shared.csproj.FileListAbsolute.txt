@@ -1,0 +1,12 @@
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\bin\Release\net5.0-windows\PACS.Shared.deps.json
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\bin\Release\net5.0-windows\PACS.Shared.dll
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\bin\Release\net5.0-windows\ref\PACS.Shared.dll
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\bin\Release\net5.0-windows\PACS.Shared.pdb
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Release\net5.0-windows\PACS.Shared.csproj.AssemblyReference.cache
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Release\net5.0-windows\PACS.Shared.GeneratedMSBuildEditorConfig.editorconfig
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Release\net5.0-windows\PACS.Shared.AssemblyInfoInputs.cache
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Release\net5.0-windows\PACS.Shared.AssemblyInfo.cs
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Release\net5.0-windows\PACS.Shared.csproj.CoreCompileInputs.cache
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Release\net5.0-windows\PACS.Shared.dll
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Release\net5.0-windows\ref\PACS.Shared.dll
+D:\OneDrive\Solution\repos\PACS\PACS.Shared\obj\Release\net5.0-windows\PACS.Shared.pdb

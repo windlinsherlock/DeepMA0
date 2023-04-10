@@ -1,0 +1,153 @@
+﻿<UserControl x:Class="PACS.Views.ZoneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ext="clr-namespace:PACS.Extensions"
+             xmlns:local="clr-namespace:PACS.Views" xmlns:Converters="clr-namespace:PACS.Commons.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:prism="http://prismlibrary.com/" 
+             xmlns:viewmodels="clr-namespace:PACS.ViewModels"
+             d:DataContext="{d:DesignInstance Type={x:Type viewmodels:ZoneViewModel}}"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Converters:NagateConverter x:Key="NagateConverter"/>
+    </UserControl.Resources>
+    <Grid>
+
+
+
+        <materialDesign:DialogHost>
+            <Grid>
+                <!--文件夹-->
+                <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                        <ListBox x:Name="PublicList" ItemsSource="{Binding PublicFileFolders}"
+                                     SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}" >
+                            
+                            <!--<ListBox.ContextMenu>
+                                <ContextMenu Width="100">
+                                    <MenuItem Header="加入"/>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>-->
+                            
+                            <ListBox.ItemsPanel >
+                                <ItemsPanelTemplate >
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+
+                            <i:Interaction.Triggers >
+                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding NavigateCommand}" 
+                                                       CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                            
+
+                            <ListBox.ItemTemplate >
+                                
+                                <DataTemplate>
+                                    <StackPanel Background="Transparent" Orientation="Horizontal">
+                                        
+                                        
+                                        
+                                        <StackPanel.ContextMenu>
+                                            <ContextMenu Width="150" >
+                                                <MenuItem Header="添加引用" Click="SaveCommand2"/>
+                                                <MenuItem Header="保存至我的文件" Click="SaveCommand"/>
+                                            </ContextMenu>
+                                        </StackPanel.ContextMenu>
+                                        <Grid Height="150" Width="150">
+                                            
+
+
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="1*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="5"/>
+                                                <RowDefinition Height="1*"/>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+
+
+                                            <materialDesign:PackIcon  Grid.Column="1" Grid.Row="1" Width="140" Height="140" Kind="FolderOutline"/>
+
+
+
+                                            <ScrollViewer Grid.Column="1" Grid.Row="2" VerticalScrollBarVisibility="Hidden">
+
+                                                <TextBlock  Text="{Binding Name}" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="150" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+                                            </ScrollViewer>
+
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                </Grid>
+                
+                <Grid Visibility="{Binding IsVisible,Converter={StaticResource NagateConverter}}">
+                    <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                        <ListBox x:Name="List" ItemsSource="{Binding FileItems}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+
+                            
+
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Background="Transparent" Orientation="Horizontal">
+                                        <Grid Height="150" Width="150">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="1*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="5"/>
+                                                <RowDefinition Height="1*"/>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Image  Source="{Binding Thumb}" Grid.Column="1" Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="120" MaxWidth="120"/>
+                                            
+
+                                            <ScrollViewer Grid.Column="1" Grid.Row="2" VerticalScrollBarVisibility="Hidden">
+
+                                                <TextBlock  Text="{Binding FileName}" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="150" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+                                            </ScrollViewer>
+
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                    
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50" Height="50" Margin="0,0,40,40"
+                                Command="{Binding BackCommand}"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" Background="{x:Null}" Cursor="Hand">
+
+                        <materialDesign:PackIcon Kind="ArrowBack" Width="40" Height="40"/>
+                    </Button>
+                    
+                </Grid>
+            </Grid>
+        </materialDesign:DialogHost>
+        <ContentControl prism:RegionManager.RegionName="{x:Static ext:PrismManager.ZoneViewRegionName}" />
+    </Grid>
+</UserControl>

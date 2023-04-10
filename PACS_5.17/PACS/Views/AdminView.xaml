@@ -1,0 +1,137 @@
+﻿<UserControl x:Class="PACS.Views.AdminView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PACS.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:prism="http://prismlibrary.com/" 
+             xmlns:viewmodels="clr-namespace:PACS.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:AdminViewModel}"
+             
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <Style x:Key="DataGridHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+
+        <Style x:Key="DataGridCellStyle" TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <TabControl  x:Name="Tab" Grid.Column="0"
+            Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
+            SelectedIndex="{Binding SelectedTab, UpdateSourceTrigger=PropertyChanged}"
+            TabStripPlacement="Left"            
+            materialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Height="auto" Width="auto" Orientation="Vertical" ToolTip="本地文件，不会上传到服务器">
+                        <materialDesign:PackIcon Kind="Account" Width="24" Height="24" HorizontalAlignment="Center" />
+                        <TextBlock  Text="用户" HorizontalAlignment="Center" Margin="0,3,0,0" />
+                    </StackPanel>
+                </TabItem.Header>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <DataGrid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding Users}" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Columns >
+                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}" />
+
+                            <DataGridTextColumn Header="用户名" Binding="{Binding Name}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                            <DataGridTextColumn Header="邮箱" Binding="{Binding Email}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                            <DataGridCheckBoxColumn Header="是否通过邮箱验证" Binding="{Binding EmailConfirmed}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                            <DataGridCheckBoxColumn Header="是否允许登录" Binding="{Binding  LockoutEnabled}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                            <DataGridTextColumn Header="登录失败次数" Binding="{Binding  AccessFailedCount}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button  Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="刷新" Style="{StaticResource MaterialDesignFloatingActionButton}" Margin="0,0,50,52" Background="{x:Null}" Command="{Binding RefreshCommand}" CommandParameter="GetAllUserAsync"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Height="auto" Width="auto" Orientation="Vertical" ToolTip="本地文件，不会上传到服务器">
+                        <materialDesign:PackIcon Kind="Folder" Width="24" Height="24" HorizontalAlignment="Center" />
+                        <TextBlock  Text="数据集" HorizontalAlignment="Center" Margin="0,3,0,0" />
+                    </StackPanel>
+                </TabItem.Header>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+
+                        <DataGrid  ItemsSource="{Binding Folders}" AutoGenerateColumns="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Id" Binding="{Binding FolderId}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}" />
+                                <DataGridTextColumn Header="数据集名称" Binding="{Binding FolderName}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                                <DataGridTextColumn Header="访问修饰符" Binding="{Binding AccessModifier}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                                <DataGridTextColumn Header="创建者Id" Binding="{Binding CreatedBy}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <DataGrid ItemsSource="{Binding FileItems}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="50,0,0,0">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Id" Binding="{Binding FileItemId}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}" />
+                                            <DataGridTextColumn Header="图片名称" Binding="{Binding Name}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                                            <DataGridTextColumn Header="上次用于再训练的标注结果" Binding="{Binding MaskId}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                                            <DataGridTextColumn Header="认为该图片为正例的个数" Binding="{Binding Positive}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                                            <DataGridTextColumn Header="认为该图片为负例的个数" Binding="{Binding Negative}" IsReadOnly="True" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource DataGridHeaderStyle}}" CellStyle="{Binding Mode=OneWay, Source={StaticResource DataGridCellStyle}}"/>
+                                            <DataGridTemplateColumn x:Name="UserAction"  Width="100">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Button Style="{StaticResource MaterialDesignFlatButton}" Content="详情" Tag="{Binding FileItemId}" Click="Detail" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                        
+                                    </DataGrid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+
+                    </ScrollViewer>
+                    <Button Grid.Column="1" Grid.Row="1"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="刷新" Style="{StaticResource MaterialDesignFloatingActionButton}" Margin="0,0,50,52" Background="{x:Null}" Command="{Binding RefreshCommand}" CommandParameter="GetAllFolderAsync"/>
+                    
+                    
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+    
+
+    
+</UserControl>
